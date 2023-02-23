@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bootstrap demo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container-fluid h-100 d-flex flex-column">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+            Order Screen
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+            Edit Data
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+            Order History
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-product-tab" data-bs-toggle="pill" data-bs-target="#pills-product1" type="button" role="tab" aria-controls="pills-product" aria-selected="false">
+            Product Statistics
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active h-100" id="pills-home1" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+          <div class="search-container">
+            <div class="row">
+              <div class="col-12 d-flex justify-content-center">
+                <label for="search">Search for Product:</label>
+                <input type="text" name="search" id="search" />
+              </div>
+            </div>
+          </div>
+          <div class="order-screen">
+            <div class="container-fluid h-100">
+              <div class="row h-100">
+                <div class="col-3 h-100">
+                  <div class="category-container h-100">
+                    <h2 class="section-title">Category</h2>
+                    <div class="row categories"></div>
+                  </div>
+                </div>
+                <div class="col-5 h-100">
+                  <div class="row h-50">
+                    <div class="product-container h-100">
+                      <h2 class="section-title">Product</h2>
+                      <div class="row products"></div>
+                    </div>
+                  </div>
+                  <div class="row h-50">
+                    <div class="product-price-container h-100">
+                      <h2 class="section-title">Product Size</h2>
+                      <div class="row product-prices"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 h-100">
+                  <div class="row h-50">
+                    <div class="cart-container h-100">
+                      <h2 class="section-title">Cart</h2>
+                      <ul class="cart"></ul>
+                    </div>
+                  </div>
+                  <div class="row h-50">
+                    <div class="cart-payment-container h-100">
+                      <h2 class="section-title">Payment</h2>
+                      <div class="row payment">
+                        <div class="col-12 py-3 d-flex justify-content-between payment-section">
+                          <input id="payment-amount" type="number" placeholder="Payment Amount" />
+                          <select name="payment-method" id="payment-method">
+                            <option value="cash">Cash</option>
+                            <option value="credit">Credit</option>
+                          </select>
+                          <button class="btn btn-info" id="paymentBtn">Payment</button>
+                        </div>
+                        <div class="col-6">
+                          <!-- <p class="d-flex justify-content-between">Total: <span class="cart-total"></span></p>
+                  <p class="d-flex justify-content-between">Vat: <span class="cart-vat"></span></p> -->
+                          <p class="d-flex justify-content-between">Grant Total: <span class="cart-granttotal"></span></p>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-success p-4 mb-2" id="finishOrderBtn">Finish Order</button>
+                          <button class="btn btn-danger" id="cancelOrderBtn">Cancel Order</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+          <div class="edit-screen">
+            <div class="container-fluid h-100">
+              <div class="row h-100">
+                <div class="d-flex align-items-start">
+                  <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button
+                      class="nav-link active"
+                      id="v-pills-home-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#v-pills-home"
+                      type="button"
+                      role="tab"
+                      aria-controls="v-pills-home"
+                      aria-selected="true"
+                    >
+                      Add Data
+                    </button>
+                    <button
+                      class="nav-link"
+                      id="v-pills-profile-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#v-pills-profile"
+                      type="button"
+                      role="tab"
+                      aria-controls="v-pills-profile"
+                      aria-selected="false"
+                    >
+                      Delete Data
+                    </button>
+                    <button
+                      class="nav-link"
+                      id="v-pills-messages-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#v-pills-messages"
+                      type="button"
+                      role="tab"
+                      aria-controls="v-pills-messages"
+                      aria-selected="false"
+                    >
+                      Edit Data
+                    </button>
+                  </div>
+                  <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+                      <div class="add-right-container">
+                        <h2 class="section-title">Changes</h2>
+                        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link active"
+                              id="pills-home-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-home"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-home"
+                              aria-selected="true"
+                            >
+                              Category
+                            </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link"
+                              id="pills-profile-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-profile"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-profile"
+                              aria-selected="false"
+                            >
+                              Product
+                            </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link"
+                              id="pills-contact-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-contact"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-contact"
+                              aria-selected="false"
+                            >
+                              Product Price
+                            </button>
+                          </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                          <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="category-tab">
+                              <label for="edit-category-id1">Category Id:</label>
+                              <input type="number" name="edit-category-id1" id="edit-category-id1" />
+                              <label for="edit-category-name1">Category Name:</label>
+                              <input type="text" name="edit-category-name1" id="edit-category-name1" />
+                              <button class="btn btn-success addDataBtn1">Add</button>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                            <div class="product-tab">
+                              <label for="edit-product-id1">Product Id:</label>
+                              <input type="number" name="edit-product-id1" id="edit-product-id1" />
+                              <label for="edit-product-catid1">Category Id:</label>
+                              <input type="number" name="edit-product-catid1" id="edit-product-catid1" />
+                              <label for="edit-product-name1">Product Name:</label>
+                              <input type="text" name="edit-product-name1" id="edit-product-name1" />
+                              <button class="btn btn-success addDataBtn2">Add</button>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                            <div class="product-price-tab">
+                              <label for="edit-product-price-id1">Product Price Id:</label>
+                              <input type="number" name="edit-product-price-id1" id="edit-product-price-id1" />
+                              <br />
+                              <label for="edit-product-price-productid1">Product Id:</label>
+                              <input type="number" name="edit-product-price-productid1" id="edit-product-price-productid1" />
+                              <br />
+                              <label for="edit-product-price-name1">Product Price Name:</label>
+                              <input type="text" name="edit-product-price-name1" id="edit-product-price-name1" />
+                              <br />
+                              <label for="edit-product-price-price1">Product Price Price:</label>
+                              <input type="number" name="edit-product-price-price1" id="edit-product-price-price1" />
+                              <br />
+                              <label for="edit-product-price-vat">Product Price Vat:</label>
+                              <input type="number" name="edit-product-price-vat" id="edit-product-price-vat" />
+                              <br />
+                              <button class="btn btn-success addDataBtn3">Add</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
+                      <div class="delete-right-container">
+                        <h2 class="section-title">Changes</h2>
+                        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link active"
+                              id="pills-home-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-home3"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-home"
+                              aria-selected="true"
+                            >
+                              Category
+                            </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link"
+                              id="pills-profile-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-profile3"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-profile"
+                              aria-selected="false"
+                            >
+                              Product
+                            </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link"
+                              id="pills-contact-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-contact3"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-contact"
+                              aria-selected="false"
+                            >
+                              Product Price
+                            </button>
+                          </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                          <div class="tab-pane fade show active" id="pills-home3" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="category-tab">
+                              <label for="delete-category-id3">Category Id:</label>
+                              <input data-source="category" type="number" name="delete-category-id2" id="delete-category-id2" />
+                              <label for="delete-category-name2">Category Name:</label>
+                              <input data-source="category" type="text" name="delete-category-name2" id="delete-category-name2" />
+                              <button data-source="category" class="btn btn-success deleteDataBtn">Delete</button>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-profile3" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                            <div class="product-tab">
+                              <label for="delete-product-id2">Product Id:</label>
+                              <input data-source="product" type="number" name="delete-product-id2" id="delete-product-id2" />
+                              <label for="delete-product-catid2">Category Id:</label>
+                              <input data-source="product" type="number" name="delete-product-catid2" id="delete-product-catid2" />
+                              <label for="delete-product-name2">Product Name:</label>
+                              <input data-source="product" type="text" name="delete-product-name2" id="delete-product-name2" />
+                              <button data-source="product" class="btn btn-success deleteDataBtn">Delete</button>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-contact3" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                            <div class="product-price-tab">
+                              <label for="delete-product-price-id2">Product Price Id:</label>
+                              <input data-source="productPrice" type="number" name="delete-product-price-id2" id="delete-product-price-id2" />
+                              <br />
+                              <label for="delete-product-price-productid2">Product Id:</label>
+                              <input data-source="productPrice" type="number" name="delete-product-price-productid2" id="delete-product-price-productid2" />
+                              <br />
+                              <label for="delete-product-price-name2">Product Price Name:</label>
+                              <input data-source="productPrice" type="text" name="delete-product-price-name2" id="delete-product-price-name2" />
+                              <br />
+                              <label for="delete-product-price-price2">Product Price Price:</label>
+                              <input data-source="productPrice" type="number" name="delete-product-price-price2" id="delete-product-price-price2" />
+                              <br />
+                              <label for="delete-product-price-vat2">Product Price Vat:</label>
+                              <input data-source="productPrice" type="number" name="delete-product-price-vat2" id="delete-product-price-vat2" />
+                              <br />
+                              <button data-source="productPrice" class="btn btn-success deleteDataBtn">Delete</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">
+                      <div class="edit-right-container">
+                        <h2 class="section-title">Changes</h2>
+                        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link active"
+                              id="pills-home-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-home2"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-home"
+                              aria-selected="true"
+                            >
+                              Category
+                            </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link"
+                              id="pills-profile-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-profile2"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-profile"
+                              aria-selected="false"
+                            >
+                              Product
+                            </button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                            <button
+                              class="nav-link"
+                              id="pills-contact-tab"
+                              data-bs-toggle="pill"
+                              data-bs-target="#pills-contact2"
+                              type="button"
+                              role="tab"
+                              aria-controls="pills-contact"
+                              aria-selected="false"
+                            >
+                              Product Price
+                            </button>
+                          </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                          <div class="tab-pane fade show active" id="pills-home2" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="category-tab">
+                              <label for="edit-category-id2">Category Id:</label>
+                              <input data-source="category" type="number" name="edit-category-id2" id="edit-category-id2" />
+                              <label for="edit-category-name2">Category Name:</label>
+                              <input data-source="category" type="text" name="edit-category-name2" id="edit-category-name2" />
+                              <button data-source="category" class="btn btn-success editDataBtn">Update</button>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-profile2" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                            <div class="product-tab">
+                              <label for="edit-product-id2">Product Id:</label>
+                              <input data-source="product" type="number" name="edit-product-id2" id="edit-product-id2" />
+                              <label for="edit-product-catid2">Category Id:</label>
+                              <input data-source="product" type="number" name="edit-product-catid2" id="edit-product-catid2" />
+                              <label for="edit-product-name2">Product Name:</label>
+                              <input data-source="product" type="text" name="edit-product-name2" id="edit-product-name2" />
+                              <button data-source="product" class="btn btn-success editDataBtn2">Update</button>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-contact2" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                            <div class="product-price-tab">
+                              <label for="edit-product-price-id2">Product Price Id:</label>
+                              <input data-source="productPrice" type="number" name="edit-product-price-id2" id="edit-product-price-id2" />
+                              <br />
+                              <label for="edit-product-price-productid2">Product Id:</label>
+                              <input data-source="productPrice" type="number" name="edit-product-price-productid2" id="edit-product-price-productid2" />
+                              <br />
+                              <label for="edit-product-price-name2">Product Price Name:</label>
+                              <input data-source="productPrice" type="text" name="edit-product-price-name2" id="edit-product-price-name2" />
+                              <br />
+                              <label for="edit-product-price-price2">Product Price Price:</label>
+                              <input data-source="productPrice" type="number" name="edit-product-price-price2" id="edit-product-price-price2" />
+                              <br />
+                              <label for="edit-product-price-vat2">Product Price Vat:</label>
+                              <input data-source="productPrice" type="number" name="edit-product-price-vat2" id="edit-product-price-vat2" />
+                              <br />
+                              <button data-source="productPrice" class="btn btn-success editDataBtn3">Update</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact1" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+          <div class="order-history-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">VAT</th>
+                  <th scope="col">Grant Total</th>
+                  <th scope="col">Contains</th>
+                  <th scope="col">Payment</th>
+                </tr>
+              </thead>
+              <tbody class="orders"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-product1" role="tabpanel" aria-labelledby="pills-product-tab" tabindex="0">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Size</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Grant Total</th>
+              </tr>
+            </thead>
+            <tbody class="product-statistics">
+              <tr></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

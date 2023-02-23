@@ -1,0 +1,157 @@
+:root {
+  --bg-color: #004643;
+  --secondaryBg-color: #01625d;
+  --title-color: #fffffe;
+  --cardBg-color: #abd1c6;
+  --cardText-color: #1B2430;
+
+}
+
+body {
+  background-color: var(--bg-color);
+  height: 100vh;
+}
+
+label {
+  color: #FFFFFF;
+}
+
+.nav-link {
+  color: #FFFFFF;
+  border-radius: 0 !important;
+}
+
+.nav-link:hover {
+  border-radius: 0;
+  background-color: #01625d;
+  color: #FFFFFF;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+  background-color: #01625d;
+  border-radius: 0;
+}
+
+.tab-content {
+  flex: 1;
+  height: calc(100vh - 56px);
+}
+
+.order-screen {
+  height: calc(100% - 30px);
+}
+
+.section-title {
+  text-align: center;
+  color: var(--title-color);
+  font-size: 36px;
+}
+
+.category-container,
+.product-container,
+.product-price-container,
+.cart-container,
+.cart-payment-container,
+.edit-left-container,
+.add-right-container,
+.delete-right-container,
+.edit-right-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-tab,
+.product-tab,
+.product-price-tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.table {
+  color: #FFFFFF;
+}
+
+.categories,
+.products,
+.product-prices,
+.cart,
+.payment {
+  background-color: var(--secondaryBg-color);
+  margin: 0;
+  flex: 1;
+}
+
+.cart {
+  overflow-y: scroll;
+  padding: 0;
+  flex: 1;
+}
+
+.cart li {
+  padding: 10px;
+}
+
+.cart li p {
+  font-size: 18px;
+  color: #abd1c6;
+  margin-bottom: 0;
+}
+
+.categoryBtn,
+.productBtn,
+.productPriceBtn {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-size: 20px;
+  text-transform: capitalize;
+  background-color: var(--cardBg-color);
+  color: var(--cardText-color);
+}
+
+.cart-payment-container p {
+  font-size: 18px;
+  color: var(--title-color);
+}
+
+.cart-payment-container p:last-of-type {
+  font-size: 22px;
+}
+
+.payment-section {
+  height: 80px;
+}
+
+#payment-amount {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+#payment-method {
+  border: none;
+  outline: none;
+}
+
+#finishOrderBtn,
+#cancelOrderBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-size: 20px;
+  text-transform: capitalize;
+  width: 100%;
+}
+
+.app-menu-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
