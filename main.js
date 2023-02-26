@@ -6,6 +6,8 @@ let cart = [];
 let cartPrice = 0;
 let payment = [];
 let soldProductAll = [];
+let editItemId;
+let inputs;
 //---------------------BOOTSTRAP----------------//
 
 // localStorage.clear();
@@ -800,16 +802,27 @@ const editData = (newData, id, target) => {
   deleteData(id, target), addData(newData, target);
 };
 
+//---------------DATA FORMATTERS---------------------//
+const dateFormatter = new Intl.DateTimeFormat("default", {
+  year: "2-digit",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
+const currencyFormatter = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" });
+
 //---------------LOGİC---------------------//
 
 const insertOrder = () => {
   const id = order.length ? order[order.length - 1].id + 1 : 1;
   const orderDate = new Date();
-  const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
-
   order.push({
     id: id,
-    date: `${padL(orderDate.getMonth() + 1)}/${padL(orderDate.getDate())}/${orderDate.getFullYear()} ${padL(orderDate.getHours())}:${padL(orderDate.getMinutes())}:${padL(orderDate.getSeconds())}`,
+    date: `${dateFormatter.format(orderDate)}`,
     total: totalCart(),
     vat: vatCart(),
     grantTotal: grantTotalCart(),
@@ -838,9 +851,21 @@ const cartHandler = () => {
   cartPrice = grantTotalCart();
 };
 
-const totalCart = () => cart.map((item) => item.price - item.price * item.vat).reduce((total, current) => total + current, 0);
-const vatCart = () => cart.map((item) => item.price * item.vat).reduce((total, current) => total + current, 0);
-const grantTotalCart = () => cart.map((item) => item.price).reduce((total, current) => total + current, 0);
+const totalCart = () =>
+  cart
+    .map((item) => item.price - item.price * item.vat)
+    .reduce((total, current) => total + current, 0)
+    .toFixed(2);
+const vatCart = () =>
+  cart
+    .map((item) => item.price * item.vat)
+    .reduce((total, current) => total + current, 0)
+    .toFixed(2);
+const grantTotalCart = () =>
+  cart
+    .map((item) => item.price)
+    .reduce((total, current) => total + current, 0)
+    .toFixed(2);
 const productCart = () => cart.map((item) => item.id);
 
 const paymentCart = (amount, method) => {
@@ -955,7 +980,7 @@ const cartDisplay = () => {
       $(".cart").append(
         `<li class="d-flex justify-content-between"><p class="w-75 d-flex justify-content-between" data-product-price="${item.id}">${getData(item.productId, product).name.replaceAll("-", " ")}(${
           item.name
-        })<span>${item.price}</span></p>  <div><button class="incrementBtn" data-product-price="${item.id}">+</button> <button class="decrementBtn" data-product-price="${
+        })<span>${currencyFormatter.format(item.price)}</span></p>  <div><button class="incrementBtn" data-product-price="${item.id}">+</button> <button class="decrementBtn" data-product-price="${
           item.id
         }">-</button> <button class="delBtn" data-product-price="${item.id}">Del</button></div>`
       );
@@ -971,7 +996,7 @@ const amountCart = (id) => {
   let itemIncrement = document.querySelector(`p[data-product-price="${id}"]`);
   itemIncrement.innerText = `${getData(getData(id, productPrice).productId, product).name.replaceAll("-", " ")}(${getData(id, productPrice).name}) (${filterData(id, "id", cart).length})`;
   let price = document.createElement("span");
-  let priceText = document.createTextNode(`${filterData(id, "id", cart).length * getData(id, productPrice).price}`);
+  let priceText = document.createTextNode(`${currencyFormatter.format(filterData(id, "id", cart).length * getData(id, productPrice).price)}`);
   price.appendChild(priceText);
   itemIncrement.appendChild(price);
 };
@@ -988,7 +1013,7 @@ const paymentFunc = () => {
 $("#paymentBtn").on("click", paymentFunc);
 
 const paymentDisplay = () => {
-  $(".cart-granttotal").html(`${cartPrice}`);
+  $(".cart-granttotal").html(`${currencyFormatter.format(cartPrice)}`);
 };
 
 const finishOrder = () => {
@@ -1016,137 +1041,304 @@ $("#cancelOrderBtn").on("click", cancelOrder);
 
 //---------------------------------------------------Edit Section------------------------------------------//
 
-//---------------------Add Section---------------------//
-
-$("#edit-category-id1").val(`${category.length + 1}`);
-
-const addDataCategoryBtnFunc = () => {
-  let categoryIdInput = $("#edit-category-id1").val();
-  let categoryNameInput = $("#edit-category-name1").val();
-  addData({ id: +categoryIdInput, name: categoryNameInput }, category);
-  saveToStorageAll();
-  $("#edit-category-id1").val(`${category.length + 1}`);
-};
-
-$(".addDataBtn1").on("click", addDataCategoryBtnFunc);
-
-$("#edit-product-id1").val(`${product.length + 1}`);
-
-const addDataProductBtnFunc = () => {
-  let productIdInput = $("#edit-product-id1").val();
-  let categoryIdInput = $("#edit-product-catid1").val();
-  let productNameInput = $("#edit-product-name1").val();
-  addData({ id: +productIdInput, categoryId: +categoryIdInput, name: productNameInput }, product);
-  saveToStorageAll();
-  $("#edit-product-id1").val(`${product.length + 1}`);
-};
-
-$(".addDataBtn2").on("click", addDataProductBtnFunc);
-
-$("#edit-product-price-id1").val(`${productPrice.length + 1}`);
-const addDataProductPriceBtnFunc = () => {
-  let productPriceIdInput = $("#edit-product-price-id1").val();
-  let productPriceProductIdInput = $("#edit-product-price-productid1").val();
-  let productPriceNameInput = $("#edit-product-price-name1").val();
-  let productPricePriceInput = $("#edit-product-price-price1").val();
-  let productPriceVatInput = $("#edit-product-price-vat").val();
-  addData({ id: +productPriceIdInput, productId: +productPriceProductIdInput, name: productPriceNameInput, price: +productPricePriceInput, vat: +productPriceVatInput }, productPrice);
-  saveToStorageAll();
-  $("#edit-product-price-id1").val(`${productPrice.length + 1}`);
-};
-
-$(".addDataBtn3").on("click", addDataProductPriceBtnFunc);
-
-//---------------------Delete Section---------------------//
-
-const deleteFiller = (e) => {
-  let editItem;
-  let editId = e.target.value;
-  if (e.target.dataset.source == "category") {
-    editItem = getData(editId, category);
-    $("#delete-category-id2").val(editItem.id);
-    $("#delete-category-name2").val(editItem.name);
-  } else if (e.target.dataset.source == "product") {
-    editItem = getData(editId, product);
-    $("#delete-product-id2").val(editItem.id);
-    $("#delete-product-catid2").val(editItem.categoryId);
-    $("#delete-product-name2").val(editItem.name);
-  } else if (e.target.dataset.source == "productPrice") {
-    editItem = getData(editId, productPrice);
-    $("#delete-product-price-id2").val(editItem.id);
-    $("#delete-product-price-productid2").val(editItem.productId);
-    $("#delete-product-price-name2").val(editItem.name);
-    $("#delete-product-price-price2").val(editItem.price);
-    $("#delete-product-price-vat2").val(editItem.vat);
+const addBtnFunc = (e) => {
+  switch (e.target.dataset.source) {
+    case "category":
+      $(".edit-category").prepend(`<tr>
+                      <th scope="row"><input data-id="${category.length + 1}" data-source="category" /></th>
+                      <td><input data-id="${category.length + 1}" data-source="category" /></td>
+                      <td>
+                        <div class="edit-buttons">
+                          <button data-id="${category.length + 1}" data-source="category" class="btn btn-info editBtn">Edit</button>
+                          <button data-id="${category.length + 1}" data-source="category" class="btn btn-success saveBtn">Save</button>
+                          <button data-id="${category.length + 1}" data-source="category" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                      </td>
+                    </tr>`);
+      $(`input[data-id="${category.length + 1}"][data-source="category"]`)
+        .first()
+        .val(category.length + 1);
+      $(`.saveBtn[data-id="${category.length + 1}"][data-source="category"]`).css("display", "inline-block");
+      break;
+    case "product":
+      $(".edit-product").prepend(`<tr>
+                      <th scope="row"><input data-id="${product.length + 1}" data-source="product" /></th>
+                      <td><input data-id="${product.length + 1}" data-source="product" /></td>
+                      <td><input data-id="${product.length + 1}" data-source="product" /></td>
+                      <td>
+                        <div class="edit-buttons">
+                          <button data-id="${product.length + 1}" data-source="product" class="btn btn-info editBtn">Edit</button>
+                          <button data-id="${product.length + 1}" data-source="product" class="btn btn-success saveBtn">Save</button>
+                          <button data-id="${product.length + 1}" data-source="product" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                      </td>
+                    </tr>`);
+      $(`input[data-id="${product.length + 1}"][data-source="product"]`)
+        .first()
+        .val(product.length + 1);
+      $(`.saveBtn[data-id="${product.length + 1}"][data-source="product"]`).css("display", "inline-block");
+      break;
+    case "productPrice":
+      $(".edit-product-price").prepend(`<tr>
+                      <th scope="row"><input data-id="${productPrice.length + 1}" data-source="productPrice" /></th>
+                      <td><input data-id="${productPrice.length + 1}" data-source="productPrice" /></td>
+                      <td><input data-id="${productPrice.length + 1}" data-source="productPrice" /></td>
+                      <td><input data-id="${productPrice.length + 1}" data-source="productPrice" /></td>
+                      <td><input data-id="${productPrice.length + 1}" data-source="productPrice" /></td>
+                      <td>
+                        <div class="edit-buttons">
+                          <button data-id="${productPrice.length + 1}" data-source="productPrice" class="btn btn-info editBtn">Edit</button>
+                          <button data-id="${productPrice.length + 1}" data-source="productPrice" class="btn btn-success saveBtn">Save</button>
+                          <button data-id="${productPrice.length + 1}" data-source="productPrice" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                      </td>
+                    </tr>`);
+      $(`input[data-id="${productPrice.length + 1}"][data-source="productPrice"]`)
+        .first()
+        .val(productPrice.length + 1);
+      $(`.saveBtn[data-id="${productPrice.length + 1}"][data-source="productPrice"]`).css("display", "inline-block");
+      break;
   }
+  $(".saveBtn").on("click", editSave);
 };
 
-const deleteDataBtnFunc = (e) => {
-  if (e.target.dataset.source == "category") {
-    deleteData(+$("#delete-category-id2").val(), category);
-  } else if (e.target.dataset.source == "product") {
-    deleteData(+$("#delete-product-id2").val(), product);
-  } else if (e.target.dataset.source == "productPrice") {
-    deleteData(+$("#delete-product-price-id2").val(), productPrice);
+$(".addBtn").on("click", addBtnFunc);
+
+const editFiller = () => {
+  $(".edit-category").html("");
+  $(".edit-product").html("");
+  $(".edit-product-price").html("");
+  category.map((item) =>
+    $(".edit-category").append(`<tr>
+                      <th scope="row"><span data-id="${item.id}" data-source="category" class="editable">${item.id}</span></th>
+                      <td><span data-id="${item.id}" data-source="category" class="editable">${item.name}</span></td>
+                      <td>
+                        <div class="edit-buttons">
+                          <button data-id="${item.id}" data-source="category" class="btn btn-info editBtn">Edit</button>
+                          <button data-id="${item.id}" data-source="category" class="btn btn-success saveBtn">Save</button>
+                          <button data-id="${item.id}" data-source="category" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                      </td>
+                    </tr>`)
+  );
+  product.map((item) =>
+    $(".edit-product").append(`<tr>
+                      <th scope="row"><span data-id="${item.id}" data-source="product" class="editable">${item.id}</span></th>
+                      <td><span data-id="${item.id}" data-source="product" class="editable">${item.categoryId}</span></td>
+                      <td><span data-id="${item.id}" data-source="product" class="editable">${item.name}</span></td>
+                      <td>
+                        <div class="edit-buttons">
+                          <button data-id="${item.id}" data-source="product" class="btn btn-info editBtn">Edit</button>
+                          <button data-id="${item.id}" data-source="product" class="btn btn-success saveBtn">Save</button>
+                          <button data-id="${item.id}" data-source="product" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                      </td>
+                    </tr>`)
+  );
+  productPrice.map((item) =>
+    $(".edit-product-price").append(`<tr>
+                      <th scope="row"><span data-id="${item.id}" data-source="productPrice" class="editable">${item.id}</span></th>
+                      <td><span data-id="${item.id}" data-source="productPrice" class="editable">${item.productId}</span></td>
+                      <td><span data-id="${item.id}" data-source="productPrice" class="editable">${item.name}</span></td>
+                      <td><span data-id="${item.id}" data-source="productPrice" class="editable">${item.price}</span></td>
+                      <td><span data-id="${item.id}" data-source="productPrice" class="editable">${item.vat}</span></td>
+                      <td>
+                        <div class="edit-buttons">
+                          <button data-id="${item.id}" data-source="productPrice" class="btn btn-info editBtn">Edit</button>
+                          <button data-id="${item.id}" data-source="productPrice" class="btn btn-success saveBtn">Save</button>
+                          <button data-id="${item.id}" data-source="productPrice" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                      </td>
+                    </tr>`)
+  );
+  $(".editBtn").on("click", editChange);
+  $(".saveBtn").on("click", editSave);
+  $(".deleteBtn").on("click", editDelete);
+};
+
+const editChange = (e) => {
+  let changingData = document.querySelectorAll(`span[data-id="${e.target.dataset.id}"][data-source="${e.target.dataset.source}"]`);
+  changingData.forEach((item) => {
+    let editInput = $(`<input data-id="${e.target.dataset.id}" data-source="${e.target.dataset.source}" />`).val($(item).text());
+    $(item).replaceWith(editInput);
+  });
+  $(`.saveBtn[data-id="${e.target.dataset.id}"][data-source="${e.target.dataset.source}"]`).css("display", "inline-block");
+};
+const editSave = (e) => {
+  inputs = document.querySelectorAll(`input[data-id="${e.target.dataset.id}"][data-source="${e.target.dataset.source}"]`);
+  switch (e.target.dataset.source) {
+    case "category":
+      editData({ id: +inputs[0].value, name: inputs[1].value }, e.target.dataset.id, category);
+      break;
+    case "product":
+      editData({ id: +inputs[0].value, categoryId: +inputs[1].value, name: inputs[2].value }, e.target.dataset.id, product);
+      break;
+    case "productPrice":
+      editData({ id: +inputs[0].value, productId: +inputs[1].value, name: inputs[2].value, price: +inputs[3].value, vat: +inputs[4].value }, e.target.dataset.id, productPrice);
+      break;
   }
+  inputs.forEach((item) => {
+    let savedData = $(`<span data-id="${e.target.dataset.id}" data-source="${e.target.dataset.source}"/>${$(item).val()}</span>`);
+    $(item).replaceWith(savedData);
+  });
+  $(`.saveBtn[data-id="${e.target.dataset.id}"][data-source="${e.target.dataset.source}"]`).css("display", "none");
+  category.sort((a, b) => a.id - b.id);
+  product.sort((a, b) => a.id - b.id);
+  productPrice.sort((a, b) => a.id - b.id);
   saveToStorageAll();
+  // editFiller();
 };
-
-$("#delete-category-id2").on("input", deleteFiller);
-$("#delete-product-id2").on("input", deleteFiller);
-$("#delete-product-price-id2").on("input", deleteFiller);
-$(".deleteDataBtn").on("click", deleteDataBtnFunc);
-
-//---------------------Edit Section---------------------//
-const editFiller = (e) => {
-  let editItem;
-  let editId = e.target.value;
-  if (e.target.dataset.source == "category") {
-    editItem = getData(editId, category);
-    $("#edit-category-id2").val(editItem.id);
-    $("#edit-category-name2").val(editItem.name);
-  } else if (e.target.dataset.source == "product") {
-    editItem = getData(editId, product);
-    $("#edit-product-id2").val(editItem.id);
-    $("#edit-product-catid2").val(editItem.categoryId);
-    $("#edit-product-name2").val(editItem.name);
-  } else if (e.target.dataset.source == "productPrice") {
-    editItem = getData(editId, productPrice);
-    $("#edit-product-price-id2").val(editItem.id);
-    $("#edit-product-price-productid2").val(editItem.productId);
-    $("#edit-product-price-name2").val(editItem.name);
-    $("#edit-product-price-price2").val(editItem.price);
-    $("#edit-product-price-vat2").val(editItem.vat);
+const editDelete = (e) => {
+  switch (e.target.dataset.source) {
+    case "category":
+      deleteData(e.target.dataset.id, category);
+      break;
+    case "product":
+      deleteData(e.target.dataset.id, product);
+      break;
+    case "productPrice":
+      deleteData(e.target.dataset.id, productPrice);
+      break;
   }
-};
-const editDataBtnFunc = (e) => {
-  let editItem;
-  if (e.target.dataset.source == "category") {
-    editItem = { id: +$("#edit-category-id2").val(), name: $("#edit-category-name2").val() };
-    editData(editItem, editItem.id, category);
-  } else if (e.target.dataset.source == "product") {
-    editItem = { id: +$("#edit-product-id2").val(), categoryId: $("#edit-product-catid2").val(), name: $("#edit-product-name2").val() };
-    editData(editItem, editItem.id, product);
-  } else if (e.target.dataset.source == "productPrice") {
-    editItem = {
-      id: +$("#edit-product-price-id2").val(),
-      productId: $("#edit-product-price-productid2").val(),
-      name: $("#edit-product-price-name2").val(),
-      price: +$("#edit-product-price-price2").val(),
-      vat: +$("#edit-product-price-vat2").val(),
-    };
-    editData(editItem, editItem.id, productPrice);
-  }
+  category.sort((a, b) => a.id - b.id);
+  product.sort((a, b) => a.id - b.id);
+  productPrice.sort((a, b) => a.id - b.id);
   saveToStorageAll();
+  editFiller();
 };
+$("#pills-profile-tab").on("click", editFiller);
 
-$("#edit-category-id2").on("input", editFiller);
-$("#edit-product-id2").on("input", editFiller);
-$("#edit-product-price-id2").on("input", editFiller);
+// //---------------------Add Section---------------------//
 
-$(".editDataBtn1").on("click", editDataBtnFunc);
-$(".editDataBtn2").on("click", editDataBtnFunc);
-$(".editDataBtn3").on("click", editDataBtnFunc);
+// $("#edit-category-id1").val(`${category.length + 1}`);
+
+// const addDataCategoryBtnFunc = () => {
+//   let categoryIdInput = $("#edit-category-id1").val();
+//   let categoryNameInput = $("#edit-category-name1").val();
+//   addData({ id: +categoryIdInput, name: categoryNameInput }, category);
+//   saveToStorageAll();
+//   $("#edit-category-id1").val(`${category.length + 1}`);
+// };
+
+// $(".addDataBtn1").on("click", addDataCategoryBtnFunc);
+
+// $("#edit-product-id1").val(`${product.length + 1}`);
+
+// const addDataProductBtnFunc = () => {
+//   let productIdInput = $("#edit-product-id1").val();
+//   let categoryIdInput = $("#edit-product-catid1").val();
+//   let productNameInput = $("#edit-product-name1").val();
+//   addData({ id: +productIdInput, categoryId: +categoryIdInput, name: productNameInput }, product);
+//   saveToStorageAll();
+//   $("#edit-product-id1").val(`${product.length + 1}`);
+// };
+
+// $(".addDataBtn2").on("click", addDataProductBtnFunc);
+
+// $("#edit-product-price-id1").val(`${productPrice.length + 1}`);
+// const addDataProductPriceBtnFunc = () => {
+//   let productPriceIdInput = $("#edit-product-price-id1").val();
+//   let productPriceProductIdInput = $("#edit-product-price-productid1").val();
+//   let productPriceNameInput = $("#edit-product-price-name1").val();
+//   let productPricePriceInput = $("#edit-product-price-price1").val();
+//   let productPriceVatInput = $("#edit-product-price-vat").val();
+//   addData({ id: +productPriceIdInput, productId: +productPriceProductIdInput, name: productPriceNameInput, price: +productPricePriceInput, vat: +productPriceVatInput }, productPrice);
+//   saveToStorageAll();
+//   $("#edit-product-price-id1").val(`${productPrice.length + 1}`);
+// };
+
+// $(".addDataBtn3").on("click", addDataProductPriceBtnFunc);
+
+// //---------------------Delete Section---------------------//
+
+// const deleteFiller = (e) => {
+//   let editItem;
+//   let editId = e.target.value;
+//   if (e.target.dataset.source == "category") {
+//     editItem = getData(editId, category);
+//     $("#delete-category-id2").val(editItem.id);
+//     $("#delete-category-name2").val(editItem.name);
+//   } else if (e.target.dataset.source == "product") {
+//     editItem = getData(editId, product);
+//     $("#delete-product-id2").val(editItem.id);
+//     $("#delete-product-catid2").val(editItem.categoryId);
+//     $("#delete-product-name2").val(editItem.name);
+//   } else if (e.target.dataset.source == "productPrice") {
+//     editItem = getData(editId, productPrice);
+//     $("#delete-product-price-id2").val(editItem.id);
+//     $("#delete-product-price-productid2").val(editItem.productId);
+//     $("#delete-product-price-name2").val(editItem.name);
+//     $("#delete-product-price-price2").val(editItem.price);
+//     $("#delete-product-price-vat2").val(editItem.vat);
+//   }
+// };
+
+// const deleteDataBtnFunc = (e) => {
+//   if (e.target.dataset.source == "category") {
+//     deleteData(+$("#delete-category-id2").val(), category);
+//   } else if (e.target.dataset.source == "product") {
+//     deleteData(+$("#delete-product-id2").val(), product);
+//   } else if (e.target.dataset.source == "productPrice") {
+//     deleteData(+$("#delete-product-price-id2").val(), productPrice);
+//   }
+//   saveToStorageAll();
+// };
+
+// $("#delete-category-id2").on("input", deleteFiller);
+// $("#delete-product-id2").on("input", deleteFiller);
+// $("#delete-product-price-id2").on("input", deleteFiller);
+// $(".deleteDataBtn").on("click", deleteDataBtnFunc);
+
+// //---------------------Edit Section---------------------//
+// const editFiller = (e) => {
+//   let editItem;
+//   let editId = e.target.value;
+//   if (e.target.dataset.source == "category") {
+//     editItem = getData(editId, category);
+//     $("#edit-category-id2").val(editItem.id);
+//     $("#edit-category-name2").val(editItem.name);
+//   } else if (e.target.dataset.source == "product") {
+//     editItem = getData(editId, product);
+//     $("#edit-product-id2").val(editItem.id);
+//     $("#edit-product-catid2").val(editItem.categoryId);
+//     $("#edit-product-name2").val(editItem.name);
+//   } else if (e.target.dataset.source == "productPrice") {
+//     editItem = getData(editId, productPrice);
+//     $("#edit-product-price-id2").val(editItem.id);
+//     $("#edit-product-price-productid2").val(editItem.productId);
+//     $("#edit-product-price-name2").val(editItem.name);
+//     $("#edit-product-price-price2").val(editItem.price);
+//     $("#edit-product-price-vat2").val(editItem.vat);
+//   }
+// };
+// const editDataBtnFunc = (e) => {
+//   let editItem;
+//   if (e.target.dataset.source == "category") {
+//     editItem = { id: +$("#edit-category-id2").val(), name: $("#edit-category-name2").val() };
+//     editData(editItem, editItem.id, category);
+//   } else if (e.target.dataset.source == "product") {
+//     editItem = { id: +$("#edit-product-id2").val(), categoryId: $("#edit-product-catid2").val(), name: $("#edit-product-name2").val() };
+//     editData(editItem, editItem.id, product);
+//   } else if (e.target.dataset.source == "productPrice") {
+//     editItem = {
+//       id: +$("#edit-product-price-id2").val(),
+//       productId: $("#edit-product-price-productid2").val(),
+//       name: $("#edit-product-price-name2").val(),
+//       price: +$("#edit-product-price-price2").val(),
+//       vat: +$("#edit-product-price-vat2").val(),
+//     };
+//     editData(editItem, editItem.id, productPrice);
+//   }
+//   saveToStorageAll();
+// };
+
+// $("#edit-category-id2").on("input", editFiller);
+// $("#edit-product-id2").on("input", editFiller);
+// $("#edit-product-price-id2").on("input", editFiller);
+
+// $(".editDataBtn1").on("click", editDataBtnFunc);
+// $(".editDataBtn2").on("click", editDataBtnFunc);
+// $(".editDataBtn3").on("click", editDataBtnFunc);
 
 //---------------------Order History Section---------------------//
 
@@ -1156,11 +1348,11 @@ const orderDisplay = () => {
     $(".orders").append(`<tr>
                   <th scope="row">${order.id}</th>
                   <td>${order.date}</td>
-                  <td>${order.total}</td>
-                  <td>${order.vat}</td>
-                  <td>${order.grantTotal}</td>
+                  <td>${currencyFormatter.format(order.total)}</td>
+                  <td>${currencyFormatter.format(order.vat)}</td>
+                  <td>${currencyFormatter.format(order.grantTotal)}</td>
                   <td>${order.contain}</td>
-                  <td>${order.payment.map((order) => `${order.amount}-${order.method}`)}</td>
+                  <td>${order.payment.map((order) => `${currencyFormatter.format(order.amount)}-${order.method}`)}</td>
                 </tr>`);
   });
 };
@@ -1176,7 +1368,7 @@ const productStatisticsDisplay = () => {
                   <td>${getData(item.productId, product).name}</td>
                   <td>${item.name}</td>
                   <td>${soldAmountSingle(item.id) ? soldAmountSingle(item.id) : 0}</td>
-                  <td>${soldAmountSingle(item.id) ? soldAmountSingle(item.id) * item.price : 0}</td>
+                  <td>${currencyFormatter.format(soldAmountSingle(item.id) ? soldAmountSingle(item.id) * item.price : 0)}</td>
                 </tr>`);
   });
 };
