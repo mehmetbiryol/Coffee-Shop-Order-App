@@ -6,7 +6,6 @@ let cart = [];
 let cartPrice = 0;
 let payment = [];
 let soldProductAll = [];
-let editItemId;
 let inputs;
 //---------------------BOOTSTRAP----------------//
 
@@ -1345,7 +1344,7 @@ $("#pills-profile-tab").on("click", editFiller);
 const orderDisplay = () => {
   $(".orders").html("");
   order.map((order) => {
-    $(".orders").append(`<tr>
+    $(".orders").prepend(`<tr>
                   <th scope="row">${order.id}</th>
                   <td>${order.date}</td>
                   <td>${currencyFormatter.format(order.total)}</td>
