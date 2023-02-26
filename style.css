@@ -155,3 +155,7 @@ label {
   top: 0;
   left: 0;
 }
+
+.saveBtn {
+  display: none;
+}
